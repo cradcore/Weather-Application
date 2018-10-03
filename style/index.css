@@ -276,11 +276,6 @@ button {
     transform: translate(-50%, -50%);
 }
 
-/* ================================ Daily Weather ================================ */
-#daily-weather-wrapper {
-    background-color: rgba(0, 0, 0, .6);
-}
-
 .weather-box {
     position: relative;
     margin-bottom: 15px;
@@ -305,4 +300,22 @@ button {
     left: -15px;
     top: calc(50% - 7px);
     transform: translateY(-50%);
+}
+
+/* ================================ Daily Weather ================================ */
+#daily-weather-wrapper {
+    background-color: rgba(0, 0, 0, .6);
+}
+
+/* ================================ Hourly Weather ================================ */
+#hourly-weather-wrapper {
+    background-color: rgba(236, 240, 241, .6);
+    color: #353B48;
+    position: absolute;
+    bottom: -100%;
+    transition: bottom .5s;
+}
+
+#hourly-weather-wrapper > div > div:last-child {
+    color: #636E72
 }
