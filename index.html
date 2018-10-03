@@ -66,6 +66,7 @@
                 </div>
             </div>
         </section>
+
         <!--Lower panel-->
         <section id="lower-panel">
             <!--Arrow button-->
@@ -114,6 +115,37 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+        <!--Menu container-->
+        <section id="menu-container">
+            <button id="close-menu-button" class="ripple">
+                &#10006;
+            </button>
+            <!--Container-->
+            <div>
+                <!--Add location-->
+                <div id="add-location-wrapper">
+                    <input type="text" placeholder="Location" id="location-input">
+                    <br>
+                    <button id="add-city-button" class="ripple disable">Add City</button>
+                    <h1 class="location-label">Colorado Springs</h1>
+                </div>
+
+                <!--Saved locations-->
+                <div id="saved-locations-wrapper">
+                    <div class="flex-container saved-locations-box">
+                        <div class="ripple">
+                            <h1>Colorado Springs</h1>
+                        </div>
+                        <div>
+                            <button class="ripple remove-saved-location">-</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
         </section>
     </main>
     <script src="./scripts/index.js"></script>
