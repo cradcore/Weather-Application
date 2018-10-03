@@ -72,7 +72,7 @@
             <button id="toggle-hourly-weather" class="ripple center_x">
                 <img src="./assets/images/icons/up-arrow.png" alt="">
             </button>
-            <!--Daily weather wrapper-->
+            <!--Daily weather-->
             <div id="daily-weather-wrapper" class="lower-panel-body">
                 <!--One row-->
                 <div class="flex-container weather-box current-day">
@@ -93,7 +93,27 @@
                     </div>
                 </div>
             </div>
-
+            <!--Hourly weather-->
+            <div id="hourly-weather-wrapper" class="lower-panel-body">
+                <!--One row-->
+                <div class="flex-container weather-box">
+                    <!--Day of week-->
+                    <div>
+                        <h1>1:00 AM</h1>
+                    </div>
+                    <!--Temperature and weather icon-->
+                    <div class="flex-container">
+                        <!--Temperature-->
+                        <div>
+                            <p>50&#176</p>
+                        </div>
+                        <!--Weather icon-->
+                        <div>
+                            <img class="icon-sm-30"  src="./assets/images/summary-icons/clear-day-grey.png">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
     <script src="./scripts/index.js"></script>
