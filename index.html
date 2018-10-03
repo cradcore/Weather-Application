@@ -11,7 +11,7 @@
 
     <meta name="msapplication-navbar-color" content="#000">
 
-    <!--iOS - Safari-->
+    <!--Safari-->
     <meta name="apple-mobile-web-app-status-bar-style" content="#000">
 
     <!--Descriptive metas-->
@@ -31,33 +31,69 @@
         <div></div>
     </div>
     <main>
+        <!--Menu button-->
         <button id="open-menu-button" class="ripple">
             <img class="icon-sm-28" src="./assets/images/icons/menu.png" alt="">
         </button>
 
+        <!--Top panel-->
         <section id="current-day-weather-container">
+            <!--City-->
             <h1 class="city-label"> Colorado Springs</h1>
-
+            <!--Current weather icon and degrees-->
             <div class="flex-container" id="temperature-summary-container">
+                <!--Current weather icon-->
                 <div>
                     <img src="./assets/images/summary-icons/clear-day-white.png" alt="">
                 </div>
+                <!--Degrees and  summary-->
                 <div>
                     <h1 id="degrees-label">20&#176;</h1>
                     <h1 id="summary-label">Clear day</h1>
                 </div>
             </div>
-
+            <!--Humidity and wind speed-->
             <div class="flex-container" id="humidity-wind-container">
+                <!--Humidity-->
                 <div>
                     <img class="icon-sm-30" src="./assets/images/icons/humidity.png" alt="">
                     <span>20%</span>
                 </div>
+                <!--Wind speed-->
                 <div>
                     <img class="icon-sm-30" src="./assets/images/icons/wind-speed-flag.png" alt="">
                     <span>3 mph</span>
                 </div>
             </div>
+        </section>
+        <!--Lower panel-->
+        <section id="lower-panel">
+            <!--Arrow button-->
+            <button id="toggle-hourly-weather" class="ripple center_x">
+                <img src="./assets/images/icons/up-arrow.png" alt="">
+            </button>
+            <!--Daily weather wrapper-->
+            <div id="daily-weather-wrapper" class="lower-panel-body">
+                <!--One row-->
+                <div class="flex-container weather-box current-day">
+                    <!--Day of week-->
+                    <div>
+                        <h1>Sunday</h1>
+                    </div>
+                    <!--Temperature and weather icon-->
+                    <div class="flex-container">
+                        <!--Temperature-->
+                        <div>
+                            <p>50&#176</p>
+                        </div>
+                        <!--Weather icon-->
+                        <div>
+                            <img class="icon-sm-30"  src="./assets/images/summary-icons/clear-day-white.png">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </section>
     </main>
     <script src="./scripts/index.js"></script>
