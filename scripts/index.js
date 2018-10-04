@@ -43,6 +43,91 @@ const UI = (function () {
 
     };
 
+    const drawWeatherData = (data, location) => {
+
+        // Set location labels
+        let currentData = data.currently;
+        document.querySelectorAll(".location-label").forEach((e) => {
+            e.innerHTML = location;
+        });
+
+        // Change background
+        document.querySelector('main').style.backgroundImage = 'url(./assets/images/bg-images/' + currentData.icon + '.jpg)';
+        // Set the icon
+        document.querySelector("#current-icon").setAttribute('src', './assets/images/summary-icons/' + currentData.icon + '-white.png');
+        // Set the degrees label
+        document.querySelector("#degrees-label").innerHTML = Math.round(currentData.temperature) + '&#176';
+        // Set the summary label
+        document.querySelector("#summary-label").innerHTML = currentData.summary;
+        // Set humidity
+        document.querySelector("#humidity-label").innerHTML = Math.round(currentData.humidity * 100) + '%';
+        // Set wind speed
+        document.querySelector("#wind-speed-label").innerHTML = (currentData.windSpeed).toFixed(1) + 'mph';
+
+        // Set daily weather panel
+        let dailyData = data.daily.data,
+            hourlyData = data.hourly.data,
+            weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+            dailyWeatherWrapper = document.querySelector("#daily-weather-wrapper"),
+            dailyWeatherModel,
+            day,
+            maxMinTemp,
+            dailyIcon;
+        while (dailyWeatherWrapper.children[1]) {
+            dailyWeatherWrapper.removeChild(dailyWeatherWrapper.children[1]);
+        }
+        for (let i = 0; i <= 6; i++) {
+            // Clone and remove display none
+            dailyWeatherModel = dailyWeatherWrapper.children[0].cloneNode(true);
+            dailyWeatherModel.classList.remove('display-none');
+
+            // Set the date
+            day = weekDays[new Date(dailyData[i].time * 1000).getDay()];
+            dailyWeatherModel.children[0].children[0].innerHTML = day;
+
+            // Set max and min temp
+            maxMinTemp = Math.round((dailyData[i].temperatureMax)) + '&#176; / ' + Math.round((dailyData[i].temperatureMin)) + '&#176;';
+            dailyWeatherModel.children[1].children[0].innerHTML = maxMinTemp;
+
+            // Set daily icon
+            dailyIcon = dailyData[i].icon;
+            dailyWeatherModel.children[1].children[1].setAttribute('src', './assets/images/summary-icons/' + dailyIcon + '-white.png');
+
+            // Add day
+            dailyWeatherWrapper.appendChild(dailyWeatherModel);
+        }
+
+        dailyWeatherWrapper.children[1].classList.add('current-day');
+
+        // Set hourly weather wrapper
+        let hourlyWeatherWrapper = document.querySelector("#hourly-weather-wrapper"),
+            hourlyWeatherModel,
+            hourlyIcon;
+        while (hourlyWeatherWrapper.children[1]) {
+            hourlyWeatherWrapper.removeChild(hourlyWeatherWrapper.children[1]);
+        }
+        for(let i = 0; i < 24; i++) {
+            // Clone and remove display-none
+            hourlyWeatherModel = hourlyWeatherWrapper.children[0].cloneNode(true);
+            hourlyWeatherModel.classList.remove('display-none')
+
+            // Set hour
+            hourlyWeatherModel.children[0].children[0].innerHTML = new Date(hourlyData[i].time * 1000).getHours() + ":00";
+
+            // Set termperature
+            hourlyWeatherModel.children[1].children[0].innerHTML = Math.round(hourlyData[i].temperature) + '&#176;'
+
+            // Set icon
+            hourlyIcon = hourlyData[i].icon;
+            hourlyWeatherModel.children[1].children[1].children[0].setAttribute('src', './assets/images/summary-icons/' + hourlyIcon + '-grey.png');
+
+            // Append model
+            hourlyWeatherWrapper.appendChild(hourlyWeatherModel)
+        }
+
+        UI.showApp();
+    };
+
     // Menu events
     document.querySelector("#open-menu-button").addEventListener('click', _showMenu);
     document.querySelector("#close-menu-button").addEventListener('click', _hideMenu);
@@ -52,7 +137,8 @@ const UI = (function () {
 
     return {
         showApp,
-        loadApp
+        loadApp,
+        drawWeatherData
     }
 })();
 
@@ -70,7 +156,7 @@ const GETLOCATION = (function () {
         locationInput.value = '';
         addCityButton.setAttribute('disable', 'true');
         addCityButton.classList.add('disable');
-        console.log("ADDDING " + location);
+        WEATHER.getWeather(location);
     };
 
 
@@ -88,6 +174,47 @@ const GETLOCATION = (function () {
     addCityButton.addEventListener('click', _addCity);
 })();
 
+
+//*********** Get weather data module ****************/
+const WEATHER = (function () {
+    const darkSkyKey = '0c6edb67c3b77ecfbb0e6c5fa92ece5d',
+        openCageDataKey = 'b1ddc25b55724b6f85d9a057239ad30c';
+
+    const _getGeocodeURL = (location) => 'https://api.opencagedata.com/geocode/v1/json?q=' + location + '&key=' + openCageDataKey;
+
+    const _getDarkSkyURL = (lat, long) => 'https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkSkyKey + '/' + lat + ',' + long;
+
+    const _getDarkSkyData = (url, location) => {
+        axios.get(url)
+            .then((res) => {
+                UI.drawWeatherData(res.data, location);
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+    };
+
+    const getWeather = (location) => {
+        UI.loadApp();
+        let geocodeURL = _getGeocodeURL(location);
+
+        axios.get(geocodeURL)
+            .then((res) => {
+                let lat = res.data.results[0].geometry.lat;
+                let long = res.data.results[0].geometry.lng;
+
+                let darkSkyURL = _getDarkSkyURL(lat, long);
+                _getDarkSkyData(darkSkyURL, location);
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+    };
+
+    return {
+        getWeather
+    }
+})();
 
 //*********** Init ****************/
 window.onload = function () {
