@@ -1,4 +1,4 @@
-//*********** Responsible for controling UI elements like 'menu' ****************/
+//*********** Menu and lower panel module ****************/
 const UI = (function () {
     let menu = document.querySelector('#menu-container');
 
@@ -55,6 +55,39 @@ const UI = (function () {
         loadApp
     }
 })();
+
+
+//*********** Get location module ****************/
+const GETLOCATION = (function () {
+
+    let location;
+
+    const locationInput = document.querySelector("#location-input"),
+        addCityButton = document.querySelector("#add-city-button");
+
+    const _addCity = () => {
+        location = locationInput.value.trim();
+        locationInput.value = '';
+        addCityButton.setAttribute('disable', 'true');
+        addCityButton.classList.add('disable');
+        console.log("ADDDING " + location);
+    };
+
+
+    locationInput.addEventListener('input', function () {
+        let inputText = this.value.trim();
+        if (inputText != '') {
+            addCityButton.removeAttribute('disable');
+            addCityButton.classList.remove('disable');
+        } else {
+            addCityButton.setAttribute('disable', 'true');
+            addCityButton.classList.add('disable');
+        }
+    })
+
+    addCityButton.addEventListener('click', _addCity);
+})();
+
 
 //*********** Init ****************/
 window.onload = function () {
