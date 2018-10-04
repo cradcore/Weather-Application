@@ -286,6 +286,10 @@ button {
     transform: translate(-50%, -50%);
 }
 
+#toggle-hourly-weather img {
+    transition: transform .5s;
+}
+
 .weather-box {
     position: relative;
     margin-bottom: 15px;
@@ -314,6 +318,7 @@ button {
 /* ================================ Daily Weather ================================ */
 #daily-weather-wrapper {
     background-color: rgba(0, 0, 0, .6);
+    transition: opacity .5s;
 }
 
 /* ================================ Hourly Weather ================================ */
@@ -324,6 +329,7 @@ button {
     bottom: -100%;
     transition: bottom .5s;
     height: 40%;
+
 }
 
 #hourly-weather-wrapper > div > div:last-child {
