@@ -106,7 +106,7 @@ const UI = (function () {
         while (hourlyWeatherWrapper.children[1]) {
             hourlyWeatherWrapper.removeChild(hourlyWeatherWrapper.children[1]);
         }
-        for(let i = 0; i < 24; i++) {
+        for (let i = 0; i < 24; i++) {
             // Clone and remove display-none
             hourlyWeatherModel = hourlyWeatherWrapper.children[0].cloneNode(true);
             hourlyWeatherModel.classList.remove('display-none')
@@ -156,7 +156,7 @@ const GETLOCATION = (function () {
         locationInput.value = '';
         addCityButton.setAttribute('disable', 'true');
         addCityButton.classList.add('disable');
-        WEATHER.getWeather(location);
+        WEATHER.getWeather(location, true);
     };
 
 
@@ -194,12 +194,23 @@ const WEATHER = (function () {
             })
     };
 
-    const getWeather = (location) => {
+    const getWeather = (location, save) => {
         UI.loadApp();
         let geocodeURL = _getGeocodeURL(location);
 
         axios.get(geocodeURL)
             .then((res) => {
+                if (res.data.results.length == 0) {
+                    console.error("Invalid location");
+                    UI.showApp();
+                    return;
+                }
+                if (save) {
+                    LOCALSTORAGE.save(location);
+                    SAVEDCITIES.drawCity(location);
+                }
+
+
                 let lat = res.data.results[0].geometry.lat;
                 let long = res.data.results[0].geometry.lng;
 
@@ -216,7 +227,99 @@ const WEATHER = (function () {
     }
 })();
 
+//*********** Local storage module ****************/
+const LOCALSTORAGE = (function () {
+
+    let savedCities = [];
+
+    const save = (cityName) => {
+        savedCities.push(cityName);
+        localStorage.setItem('savedCities', JSON.stringify(savedCities));
+    }
+
+    const get = () => {
+        if (localStorage.getItem('savedCities') != null)
+            savedCities = JSON.parse(localStorage.getItem('savedCities'))
+    }
+
+    const remove = (index) => {
+        if (savedCities.length > index) {
+            savedCities.splice(index, 1);
+            localStorage.setItem('savedCities', JSON.stringify(savedCities));
+        }
+    }
+
+    const getSavedCities = () => savedCities;
+
+    return {
+        save,
+        get,
+        remove,
+        getSavedCities
+    }
+
+})();
+
+//*********** Saved cities module ****************/
+const SAVEDCITIES = function () {
+    let container = document.querySelector("#saved-locations-wrapper");
+
+    const drawCity = (city) => {
+        let cityBox = document.createElement('div'),
+            cityWrapper = document.createElement('div'),
+            deleteWrapper = document.createElement('div'),
+            cityTextNode = document.createElement('h1'),
+            deleteButton = document.createElement('button');
+
+        cityBox.classList.add('saved-locations-box', 'flex-container');
+        cityTextNode.innerHTML = city;
+        cityTextNode.classList.add('set-city');
+        cityWrapper.classList.add('ripple', 'set-city');
+        cityWrapper.append(cityTextNode);
+        cityBox.append(cityWrapper);
+
+        deleteButton.classList.add('ripple', 'remove-saved-location');
+        deleteButton.innerHTML = '-';
+        deleteWrapper.append(deleteButton);
+        cityBox.append(deleteWrapper);
+
+        container.append(cityBox);
+    };
+
+    const _deleteCity = (cityHTMLButton) => {
+        let nodes = Array.prototype.slice.call(container.children),
+            cityWrapper = cityHTMLButton.closest('.saved-locations-box'),
+            cityIndex = nodes.indexOf(cityWrapper);
+        LOCALSTORAGE.remove(cityIndex);
+        cityWrapper.remove();
+    };
+
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('remove-saved-location'))
+            _deleteCity(event.target);
+        else if (event.target.classList.contains('set-city')) {
+            let nodes = Array.prototype.slice.call(container.children),
+                cityWrapper = event.target.closest('.saved-locations-box'),
+                cityIndex = nodes.indexOf(cityWrapper),
+                savedCities = LOCALSTORAGE.getSavedCities();
+
+            WEATHER.getWeather(savedCities[cityIndex], false);
+
+        }
+    })
+
+    return {
+        drawCity
+    }
+}();
+
 //*********** Init ****************/
 window.onload = function () {
-    UI.showApp();
+    LOCALSTORAGE.get();
+    let cities = LOCALSTORAGE.getSavedCities();
+    if (cities.length != 0) {
+        cities.forEach( (city) => SAVEDCITIES.drawCity(city));
+        WEATHER.getWeather(cities[cities.length - 1], false);
+    }
+    else UI.showApp();
 }
