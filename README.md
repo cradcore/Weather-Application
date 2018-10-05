@@ -4,10 +4,10 @@
 Created following Stan Georgian's JavaScript Udemy course
 
 ## Daily weather view
-![Daily weather view](design/daily-view.PNG)
+![Daily weather view](design/daily-view.png)
 
 ## Hourly weather view
-![Hourly weather view](design/hourly-view.PNG)
+![Hourly weather view](design/hourly-view.png)
 
 ## Menu view
-![Menu view](design/menu-view.PNG)
+![Menu view](design/menu-view.png)
