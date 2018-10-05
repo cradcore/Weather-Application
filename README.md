@@ -1,8 +1,5 @@
 # Weather-Application
 
-### Meant to viewed on a mobile device
-Created following Stan Georgian's JavaScript Udemy course
-
 ## Daily weather view
 ![Daily weather view](design/daily-view.png)
 
@@ -11,3 +8,6 @@ Created following Stan Georgian's JavaScript Udemy course
 
 ## Menu view
 ![Menu view](design/menu-view.png)
+
+### Meant to viewed on a mobile device
+Created following Stan Georgian's JavaScript Udemy course
